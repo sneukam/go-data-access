@@ -61,6 +61,18 @@ func main() {
 		log.Fatal(err)
 	}
 	fmt.Printf("1 Album found: %v\n", alb)
+
+	// insert an album
+	albId, err := addAlbum(Album{
+		Title:  "The modern sound of betty carter",
+		Artist: "Betty Carter",
+		Price:  49.99,
+	})
+	if err != nil {
+		log.Fatal(err)
+	}
+	fmt.Printf("ID of added album: %v\n", albId)
+
 }
 
 func albumsByArtist(name string) ([]Album, error) {
@@ -109,4 +121,27 @@ func albumByID(id int64) (Album, error) {
 	}
 
 	return alb, nil
+}
+
+// Insert a new album into the recordings database.
+//
+// Arguments
+//
+//	alb (Album): an Album struct with title, artist, and price populated.
+//
+// Return
+//
+//	(int64, error): album id, nil
+func addAlbum(alb Album) (int64, error) {
+	result, err := db.Exec("INSERT INTO album (title, artist, price) VALUES (?, ?, ?)", alb.Title, alb.Artist, alb.Price)
+	if err != nil {
+		return 0, fmt.Errorf("addAlbum: %v", err)
+	}
+
+	id, err := result.LastInsertId()
+	if err != nil {
+		return 0, fmt.Errorf("addAlbum: %v", err)
+	}
+
+	return id, nil
 }
