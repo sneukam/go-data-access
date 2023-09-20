@@ -1,5 +1,8 @@
 /*
 Practicing access SQL data from Go.
+
+To start the mysql server
+	sudo service mysql start;
 */
 
 package main
